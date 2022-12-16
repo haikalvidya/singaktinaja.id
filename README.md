@@ -6,13 +6,7 @@ Singkatinaja.id is a URL shortener service. It is a free service that allows you
 
 ## Backend Architecture
 
-Singkatinaja.id is built using golang and use Clean Architecture as the main architecture. The main architecture is divided into 3 layers, namely:
-
-1. **Domain Layer** - This layer contains the business logic of the application. This layer is independent of the other layers. This layer is also independent of the database used.
-
-2. **Use Case Layer** - This layer is responsible for connecting the domain layer with the infrastructure layer. This layer is also independent of the database used.
-
-3. **Infrastructure Layer** - This layer is responsible for connecting the use case layer with the database. This layer is dependent on the database used.
+Singkatinaja.id is built using golang and use Clean Architecture as the main architecture. The main architecture is divided into 3 layers.
 
 ![Clean Architecture](https://github.com/bxcodec/go-clean-arch/raw/master/clean-arch.png)
 

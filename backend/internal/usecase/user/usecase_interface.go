@@ -1,6 +1,6 @@
 package user
 
-import "singkatinaja/internal/user/payload"
+import "singkatinaja/internal/delivery/payload"
 
 type UserUsecase interface {
 	Register(req *payload.RegisterUserRequest) (*payload.UserWithTokenResponse, error)

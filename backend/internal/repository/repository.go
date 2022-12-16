@@ -1,15 +1,16 @@
-package app
+package repository
 
 import (
-	"singkatinaja/internal/user"
-	user_repository "singkatinaja/internal/user/repository"
-
 	"gorm.io/gorm"
 )
 
 type Repository struct {
-	User user.IUserRepository
+	User IUserRepository
 	Tx   Tx
+}
+
+type repositoryType struct {
+	DB *gorm.DB
 }
 
 type Tx interface {
@@ -43,8 +44,9 @@ func (t *tx) DoInTransaction(fn func(tx *gorm.DB) error) (err error) {
 }
 
 func NewRepository(db *gorm.DB) *Repository {
+	repo := &repositoryType{DB: db}
 	return &Repository{
-		User: user_repository.NewUserRepository(db),
+		User: (*userRepository)(repo),
 		Tx:   &tx{DB: db},
 	}
 }

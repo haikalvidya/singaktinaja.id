@@ -2,16 +2,18 @@ package repository
 
 import (
 	"singkatinaja/internal/models"
-	"singkatinaja/internal/user"
 
 	"gorm.io/gorm"
 )
 
-type userRepository struct {
-	DB *gorm.DB
+type IUserRepository interface {
+	SelectByEmail(email string) (*models.UserModel, error)
+	CreateTx(tx *gorm.DB, user *models.UserModel) error
 }
 
-func NewUserRepository(db *gorm.DB) user.IUserRepository {
+type userRepository repositoryType
+
+func NewUserRepository(db *gorm.DB) IUserRepository {
 	repo := &userRepository{DB: db}
 	return (*userRepository)(repo)
 }

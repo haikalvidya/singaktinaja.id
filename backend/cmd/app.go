@@ -9,7 +9,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "singkatinaja",
+	Use:   "app",
 	Short: "SingkatinAja.id is a REST API service URL Shorterner",
 	RunE: func(cmd *cobra.Command, args []string) (err error) {
 		err = app.Run(

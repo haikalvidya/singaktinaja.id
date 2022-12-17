@@ -3,7 +3,7 @@ package migration
 import "net/url"
 
 const (
-	DefaultMigrationsDir = "./configs/migrations"
+	DefaultMigrationsDir = "./migrations"
 )
 
 type Option struct {

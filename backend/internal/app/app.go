@@ -24,7 +24,7 @@ func defaultBase(o *Option) base {
 }
 
 func (a *base) initConfig() (err error) {
-	a.config, err = config.Load("config", ".", "./configs")
+	a.config, err = config.Load("config", ".", "./config")
 	if err != nil {
 		return
 	}

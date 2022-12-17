@@ -42,7 +42,7 @@ func (a *httpApp) Init() (err error) {
 
 	e.Use(utils.RateLimit())
 	e.Use(middleware.SecureWithConfig(middleware.DefaultSecureConfig))
-
+	e.IPExtractor = echo.ExtractIPDirect()
 	a.router = e
 
 	a.delivery = delivery.NewDelivery(a.router, *a.usecase)

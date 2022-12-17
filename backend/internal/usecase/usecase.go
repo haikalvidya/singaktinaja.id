@@ -6,7 +6,8 @@ import (
 )
 
 type Usecase struct {
-	User IUserUsecase
+	User     IUserUsecase
+	ShortUrl IShortUrlUsecase
 }
 
 type usecaseType struct {
@@ -17,6 +18,7 @@ type usecaseType struct {
 func NewUsecase(repo *repository.Repository, mid *middlewares.CustomMiddleware) *Usecase {
 	usc := &usecaseType{Repo: repo}
 	return &Usecase{
-		User: (*userUsecase)(usc),
+		User:     (*userUsecase)(usc),
+		ShortUrl: (*shortUrlUsecase)(usc),
 	}
 }

@@ -8,7 +8,8 @@ import (
 )
 
 type Delivery struct {
-	User *userDelivery
+	User     *userDelivery
+	ShortUrl *shortUrlDelivery
 }
 
 type deliveryType struct {
@@ -31,8 +32,23 @@ func NewDelivery(e *echo.Echo, usecase *usecase.Usecase, mid *middlewares.Custom
 }
 
 func Route(e *echo.Echo, delivery *Delivery, mid *middlewares.CustomMiddleware) {
+
+	// get long url from short url
+	e.GET("/:shortUrl", delivery.ShortUrl.GetLongUrl)
+
+	// create short url for unregister user
+	e.POST("/short-url", delivery.ShortUrl.CreateShortUrl)
+
 	e.POST("/register", delivery.User.RegisterUser)
 	e.POST("/login", delivery.User.LoginUser)
 	e.POST("/logout", delivery.User.LogoutUser, mid.JWT.ValidateJWT())
 	e.POST("/delete-account", delivery.User.DeleteUser, mid.JWT.ValidateJWT())
+
+	shortUrl := e.Group("/short-url")
+	{
+		shortUrl.POST("", delivery.ShortUrl.CreateShortUrl, mid.JWT.ValidateJWT())
+		shortUrl.GET("", delivery.ShortUrl.GetListUrls, mid.JWT.ValidateJWT())
+		shortUrl.GET("/:id", delivery.ShortUrl.GetShortUrlById, mid.JWT.ValidateJWT())
+		shortUrl.DELETE("/:id", delivery.ShortUrl.DeleteShortUrl, mid.JWT.ValidateJWT())
+	}
 }

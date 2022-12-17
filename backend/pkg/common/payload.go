@@ -1,4 +1,4 @@
-package payload
+package common
 
 type Response struct {
 	Status  bool        `json:"status"`

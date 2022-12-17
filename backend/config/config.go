@@ -35,7 +35,7 @@ type MailConfig struct {
 
 type JWTConfig struct {
 	Secret                 string `mapstructure:"secret"`
-	AccessTokenExpireHour  int    `mapstructure:"access_token_expire_hour"`
+	AccessTokenExpiredHour int    `mapstructure:"access_token_expire_hour"`
 	RefreshTokenExpireHour int    `mapstructure:"refresh_token_expire_hour"`
 }
 

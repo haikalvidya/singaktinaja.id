@@ -3,7 +3,7 @@ package middleware
 import (
 	"os"
 
-	"singkatinaja/internal/delivery/payload"
+	"singkatinaja/pkg/common"
 
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
@@ -68,7 +68,7 @@ func (l *Logger) LogError(err error, c echo.Context) {
 
 	report := err.(*echo.HTTPError)
 
-	resp := &payload.Response{
+	resp := &common.Response{
 		Message: report.Message.(string),
 		Error:   report.Message.(string),
 	}

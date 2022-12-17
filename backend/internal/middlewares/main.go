@@ -1,10 +1,7 @@
 package middlewares
 
 import (
-	"log"
-
-	"signkatinaja/config"
-
+	"singkatinaja/config"
 	"singkatinaja/pkg/logger"
 	"singkatinaja/pkg/middleware"
 
@@ -23,28 +20,14 @@ type CustomMiddleware struct {
 	Logger logger.Logger
 }
 
-type Mock struct {
-	JWT *mm.JWT
-}
-
 func New(cfg *config.Config) *CustomMiddleware {
 
 	jwt := middleware.NewJwt(cfg.JWT.AccessTokenExpiredHour, cfg.JWT.Secret)
 
-	loggerIns, err := logger.NewLogger(
-		logger.DriverLoki,
-		logger.WithLokiConfig(&logger.LokiConfig{
-			Url:    cfg.Logger.Url,
-			Source: cfg.App.Name,
-			Env:    string(cfg.App.ENV),
-		}),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
+	logger := logger.NewApiLogger(cfg)
 
 	return &CustomMiddleware{
 		JWT:    jwt,
-		Logger: loggerIns,
+		Logger: logger,
 	}
 }

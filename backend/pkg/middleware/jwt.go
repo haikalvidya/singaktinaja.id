@@ -63,7 +63,7 @@ func (j *Jwt) ValidateJWT() echo.MiddlewareFunc {
 				return nil, err
 			}
 			if !token.Valid {
-				return nil, errors.New("Invalid token")
+				return nil, errors.New("invalid token")
 			}
 			return token, nil
 		},

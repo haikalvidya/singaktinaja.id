@@ -29,7 +29,7 @@ func (a *base) initConfig() (err error) {
 		return
 	}
 
-	a.db, err = DBInit(a.config)
+	a.db, err = InitDB(a.config)
 	if err != nil {
 		return
 	}

@@ -1,5 +1,5 @@
 -- migrate:up
-CREATE TABLE `short_urls` ( 
+CREATE TABLE `short_urls` (
     `id` CHAR(36) NOT NULL ,
     `url` VARCHAR(500) NOT NULL,
     `original_url` VARCHAR(1000) NOT NULL,

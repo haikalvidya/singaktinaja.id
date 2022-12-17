@@ -34,6 +34,7 @@ func (a *httpApp) Init() (err error) {
 	}
 	a.repo = repository.NewRepository(a.db)
 	a.usecase = usecase.NewUsecase(a.repo)
+	a.middleware = middlewares.New(a.config)
 
 	e := echo.New()
 

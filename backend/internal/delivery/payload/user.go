@@ -20,17 +20,19 @@ type LoginUserRequest struct {
 }
 
 type UserInfo struct {
-	ID        string  `json:"id"`
-	FirstName string  `json:"first_name"`
-	LastName  string  `json:"last_name"`
-	Email     string  `json:"email"`
-	Phone     *string `json:"phone"`
+	ID        string `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
+	Phone     string `json:"phone,omitempty"`
 }
 
 const (
-	ERROR_USER_NOT_FOUND = "user not found"
-	ERROR_USER_EXIST     = "user already exist"
-	ERROR_USER_INVALID   = "invalid user"
-	ERROR_WRONG_PASSWORD = "wrong password"
-	ERROR_TOKEN_INVALID  = "invalid token"
+	ERROR_USER_NOT_FOUND      = "user not found"
+	ERROR_USER_EXIST          = "user already exist"
+	ERROR_USER_INVALID        = "invalid user"
+	ERROR_WRONG_PASSWORD      = "wrong password"
+	ERROR_TOKEN_INVALID       = "invalid token"
+	ERROR_PASSWORD_NOT_MATCH  = "password not match"
+	ERROR_PHONE_ALREADY_EXIST = "phone already exist"
 )

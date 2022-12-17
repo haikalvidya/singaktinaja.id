@@ -3,6 +3,7 @@ package middleware
 import (
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -27,6 +28,7 @@ type jwtCustomClaims struct {
 }
 
 func (j *Jwt) GenerateToken(userId []byte) (string, error) {
+	log.Println(userId)
 	claims := &jwtCustomClaims{
 		jwt.StandardClaims{
 			Subject:   string(userId),

@@ -33,8 +33,8 @@ func (a *httpApp) Init() (err error) {
 		return
 	}
 	a.repo = repository.NewRepository(a.db)
-	a.usecase = usecase.NewUsecase(a.repo)
 	a.middleware = middlewares.New(a.config)
+	a.usecase = usecase.NewUsecase(a.repo, a.middleware)
 
 	e := echo.New()
 
@@ -45,7 +45,7 @@ func (a *httpApp) Init() (err error) {
 	e.IPExtractor = echo.ExtractIPDirect()
 	a.router = e
 
-	a.delivery = delivery.NewDelivery(a.router, *a.usecase)
+	a.delivery = delivery.NewDelivery(a.router, a.usecase, a.middleware)
 	a.signalHttp = pkg.NewGracefullShutdown()
 	return
 }

@@ -1,11 +1,18 @@
-package app
+package usecase
+
+import "singkatinaja/internal/repository"
 
 type Usecase struct {
-	User user.IUserUsecase
+	User IUserUsecase
 }
 
-func NewUsecase(repo *Repository) *Usecase {
+type usecaseType struct {
+	Repo *repository.Repository
+}
+
+func NewUsecase(repo *repository.Repository) *Usecase {
+	usc := &usecaseType{Repo: repo}
 	return &Usecase{
-		User: user.NewUserUsecase(repo),
+		User: (*userUsecase)(usc),
 	}
 }

@@ -1,0 +1,16 @@
+server:
+  env:
+  address:
+database:
+  user:
+  password:
+  host:
+  port:
+  name:
+  params:
+jwt:
+  secret:
+  access_token_expired_hour:
+  refresh_token_expired_hour:
+mail:
+  api-key:

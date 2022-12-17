@@ -13,11 +13,6 @@ type IUserRepository interface {
 
 type userRepository repositoryType
 
-func NewUserRepository(db *gorm.DB) IUserRepository {
-	repo := &userRepository{DB: db}
-	return (*userRepository)(repo)
-}
-
 func (r *userRepository) SelectByEmail(email string) (*models.UserModel, error) {
 	user := &models.UserModel{}
 	err := r.DB.Where("email = ?", email).First(user).Error

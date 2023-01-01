@@ -23,7 +23,8 @@ func NewDelivery(e *echo.Echo, usecase *usecase.Usecase, mid *middlewares.Custom
 		Middleware: mid,
 	}
 	delivery := &Delivery{
-		User: (*userDelivery)(deliveryType),
+		User:     (*userDelivery)(deliveryType),
+		ShortUrl: (*shortUrlDelivery)(deliveryType),
 	}
 
 	Route(e, delivery, mid)
@@ -34,10 +35,10 @@ func NewDelivery(e *echo.Echo, usecase *usecase.Usecase, mid *middlewares.Custom
 func Route(e *echo.Echo, delivery *Delivery, mid *middlewares.CustomMiddleware) {
 
 	// get long url from short url
-	e.GET("/:shortUrl", delivery.ShortUrl.GetLongUrl)
+	e.GET("/:shortUrl", delivery.ShortUrl.RetrieveOriginalUrl)
 
 	// create short url for unregister user
-	e.POST("/short-url", delivery.ShortUrl.CreateShortUrl)
+	e.POST("/singkatin", delivery.ShortUrl.CreateShortUrl)
 
 	e.POST("/register", delivery.User.RegisterUser)
 	e.POST("/login", delivery.User.LoginUser)

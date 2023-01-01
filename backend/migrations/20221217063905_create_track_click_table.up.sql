@@ -6,8 +6,8 @@ CREATE TABLE `track_click` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NULL,
     `deleted_at` TIMESTAMP NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`short_url_id`) REFERENCES `short_urls`(`id`) ON DELETE CASCADE
+    PRIMARY KEY (`id`)
+    -- FOREIGN KEY (`short_url_id`) REFERENCES `short_url` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- migrate:down

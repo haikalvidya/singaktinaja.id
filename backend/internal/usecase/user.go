@@ -62,9 +62,7 @@ func (u *userUsecase) Register(req *payload.RegisterUserRequest) (*payload.UserW
 	// TODO saving token to redis
 
 	var accessToken string
-	// nil error dereference
-	// TODO fix this
-	// accessToken, _ = u.Middleware.JWT.GenerateToken([]byte(userModel.ID))
+	accessToken, _ = u.Middleware.JWT.GenerateToken([]byte(userModel.ID))
 	return &payload.UserWithTokenResponse{
 		UserInfo: userModel.PublicInfo(),
 		Token:    accessToken,
@@ -86,9 +84,7 @@ func (u *userUsecase) Login(req *payload.LoginUserRequest) (*payload.UserWithTok
 	// TODO saving token to redis
 
 	var accessToken string
-	// nil error dereference
-	// TODO fix this
-	// accessToken, _ = u.Middleware.JWT.GenerateToken([]byte(user.ID))
+	accessToken, _ = u.Middleware.JWT.GenerateToken([]byte(user.ID))
 	return &payload.UserWithTokenResponse{
 		UserInfo: user.PublicInfo(),
 		Token:    accessToken,

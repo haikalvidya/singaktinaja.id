@@ -6,11 +6,13 @@ import (
 
 	"singkatinaja/config"
 
+	"github.com/go-redis/redis"
 	"gorm.io/gorm"
 )
 
 type base struct {
 	db     *gorm.DB
+	redis  *redis.Client
 	config *config.Config
 	Args   []string
 	SubCmd string
@@ -30,6 +32,11 @@ func (a *base) initConfig() (err error) {
 	}
 
 	a.db, err = InitDB(a.config)
+	if err != nil {
+		return
+	}
+
+	a.redis, err = InitRedis(a.config)
 	if err != nil {
 		return
 	}

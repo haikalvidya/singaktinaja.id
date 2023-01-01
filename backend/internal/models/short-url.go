@@ -10,7 +10,7 @@ import (
 
 type ShortUrl struct {
 	ID          string         `db:"id" gorm:"primaryKey"`
-	URL         string         `db:"url"`
+	ShortUrl    string         `db:"short_url"`
 	OriginalURL string         `db:"original_url"`
 	Name        string         `db:"name"`
 	UserId      string         `db:"user_id"`
@@ -36,7 +36,7 @@ func (ShortUrl) TableName() string {
 func (u *ShortUrl) PublicInfo() *payload.ShortUrlInfo {
 	resp := &payload.ShortUrlInfo{
 		ID:        u.ID,
-		ShortUrl:  u.URL,
+		ShortUrl:  u.ShortUrl,
 		LongUrl:   u.OriginalURL,
 		Name:      u.Name,
 		ExpDate:   u.ExpDate.Format("2006-01-02"),

@@ -12,7 +12,7 @@ import (
 type shortUrlDelivery deliveryType
 
 func (d *shortUrlDelivery) GetShortUrlById(c echo.Context) error {
-	res := common.Response{}
+	res := &common.Response{}
 	id := c.Param("id")
 
 	ShortUrl, err := d.Usecase.ShortUrl.GetShortUrlById(id)
@@ -29,18 +29,18 @@ func (d *shortUrlDelivery) GetShortUrlById(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func (d *shortUrlDelivery) GetLongUrl(c echo.Context) error {
-	res := common.Response{}
-	shortUrl := c.Param("short_url")
+func (d *shortUrlDelivery) RetrieveOriginalUrl(c echo.Context) error {
+	res := &common.Response{}
+	shortUrl := c.Param("shortUrl")
 
-	LongUrl, err := d.Usecase.ShortUrl.GetLongUrl(shortUrl)
+	LongUrl, err := d.Usecase.ShortUrl.RetrieveOriginalUrl(shortUrl)
 	if err != nil {
 		res.Status = false
 		res.Message = err.Error()
 		return c.JSON(http.StatusBadRequest, res)
 	}
 
-	res.Message = "Success Get LongUrl"
+	res.Message = "Success Get OriginalUrl"
 	res.Data = LongUrl
 	res.Status = true
 
@@ -48,11 +48,13 @@ func (d *shortUrlDelivery) GetLongUrl(c echo.Context) error {
 }
 
 func (d *shortUrlDelivery) CreateShortUrl(c echo.Context) error {
-	res := common.Response{}
+	res := &common.Response{}
 	req := &payload.ShortUrlRequest{}
+	userId := ""
 
-	userId := d.Middleware.JWT.GetUserIdFromJwt(c)
-
+	if c.Get("user") != nil {
+		userId = d.Middleware.JWT.GetUserIdFromJwt(c)
+	}
 	// handle if unregister user create short url
 	// count created short url using real IP
 	// todo: add limit created short url for real IP
@@ -61,8 +63,8 @@ func (d *shortUrlDelivery) CreateShortUrl(c echo.Context) error {
 	}
 
 	c.Bind(req)
-
-	if err := c.Validate(req); err != nil {
+	err := c.Validate(req)
+	if err != nil {
 		res.Error = utils.GetErrorValidation(err)
 		res.Status = false
 		res.Message = "Failed Create ShortUrl"
@@ -84,7 +86,7 @@ func (d *shortUrlDelivery) CreateShortUrl(c echo.Context) error {
 }
 
 func (d *shortUrlDelivery) GetListUrls(c echo.Context) error {
-	res := common.Response{}
+	res := &common.Response{}
 
 	userId := d.Middleware.JWT.GetUserIdFromJwt(c)
 
@@ -103,7 +105,7 @@ func (d *shortUrlDelivery) GetListUrls(c echo.Context) error {
 }
 
 func (d *shortUrlDelivery) DeleteShortUrl(c echo.Context) error {
-	res := common.Response{}
+	res := &common.Response{}
 	id := c.Param("id")
 
 	err := d.Usecase.ShortUrl.DeleteShortUrl(id)

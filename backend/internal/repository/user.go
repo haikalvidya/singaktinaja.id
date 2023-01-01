@@ -42,7 +42,7 @@ func (r *userRepository) SelectByPhone(phone string) (*models.UserModel, error) 
 }
 
 func (r *userRepository) DeleteTx(tx *gorm.DB, user *models.UserModel) error {
-	err := tx.Delete(user).Error
+	err := tx.Delete(&user).Error
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,7 @@
 package delivery
 
 import (
+	"fmt"
 	"net/http"
 
 	"singkatinaja/internal/delivery/payload"
@@ -74,6 +75,16 @@ func (d *userDelivery) LogoutUser(c echo.Context) error {
 
 func (d *userDelivery) DeleteUser(c echo.Context) error {
 	res := common.Response{}
+	userId := d.Middleware.JWT.GetUserIdFromJwt(c)
 
+	fmt.Println("userId", userId)
+	err := d.Usecase.User.DeleteAccount(userId)
+	if err != nil {
+		res.Status = false
+		res.Message = err.Error()
+		return c.JSON(http.StatusBadRequest, res)
+	}
+
+	res.Message = "Success Delete User"
 	return c.JSON(http.StatusOK, res)
 }

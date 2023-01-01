@@ -12,6 +12,7 @@ type Config struct {
 	Database DatabaseConfig `mapstructure:"database"`
 	Mail     MailConfig     `mapstructure:"mail"`
 	JWT      JWTConfig      `mapstructure:"jwt"`
+	Redis    RedisConfig    `mapstructure:"redis"`
 }
 
 type ServerConfig struct {
@@ -37,6 +38,13 @@ type JWTConfig struct {
 	Secret                 string `mapstructure:"secret"`
 	AccessTokenExpiredHour int    `mapstructure:"access_token_expire_hour"`
 	RefreshTokenExpireHour int    `mapstructure:"refresh_token_expire_hour"`
+}
+
+type RedisConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     string `mapstructure:"port"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
 }
 
 func Load(cfgName string, paths ...string) (c *Config, err error) {

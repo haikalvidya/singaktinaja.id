@@ -33,7 +33,7 @@ func (ShortUrl) TableName() string {
 	return "short_urls"
 }
 
-func (u *ShortUrl) PublicInfo() *payload.ShortUrlInfo {
+func (u *ShortUrl) PublicInfo(baseUrl string) *payload.ShortUrlInfo {
 	resp := &payload.ShortUrlInfo{
 		ID:        u.ID,
 		ShortUrl:  u.ShortUrl,
@@ -43,6 +43,7 @@ func (u *ShortUrl) PublicInfo() *payload.ShortUrlInfo {
 		CreatedAt: u.CreatedAt.Format("2006-01-02 15:04:05"),
 	}
 
+	resp.ShortUrl = baseUrl + "/" + resp.ShortUrl
 	if u.User != nil {
 		resp.User = u.User.PublicInfo()
 	}

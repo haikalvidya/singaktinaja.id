@@ -1,6 +1,7 @@
 package delivery
 
 import (
+	"fmt"
 	"net/http"
 	"singkatinaja/internal/delivery/payload"
 	"singkatinaja/pkg/common"
@@ -44,6 +45,7 @@ func (d *shortUrlDelivery) RetrieveOriginalUrl(c echo.Context) error {
 	res.Data = LongUrl
 	res.Status = true
 
+	c.Redirect(http.StatusMovedPermanently, LongUrl)
 	return c.JSON(http.StatusOK, res)
 }
 
@@ -107,6 +109,7 @@ func (d *shortUrlDelivery) GetListUrls(c echo.Context) error {
 func (d *shortUrlDelivery) DeleteShortUrl(c echo.Context) error {
 	res := &common.Response{}
 	id := c.Param("id")
+	fmt.Println(id)
 
 	err := d.Usecase.ShortUrl.DeleteShortUrl(id)
 	if err != nil {

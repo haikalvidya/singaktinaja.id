@@ -11,7 +11,6 @@ type IShortUrlRepository interface {
 	SelectByShortUrl(shortUrl string) (*models.ShortUrl, error)
 	SelectByLongUrl(longUrl string) (*models.ShortUrl, error)
 	CreateTx(tx *gorm.DB, ShortUrl *models.ShortUrl) (*models.ShortUrl, error)
-	SelectByName(name string) (*models.ShortUrl, error)
 	DeleteTx(tx *gorm.DB, ShortUrl *models.ShortUrl) error
 	SelectByUserId(userId string) ([]*models.ShortUrl, error)
 }
@@ -68,13 +67,4 @@ func (r *ShortUrlRepository) SelectByUserId(userId string) ([]*models.ShortUrl, 
 		return nil, err
 	}
 	return ShortUrls, nil
-}
-
-func (r *ShortUrlRepository) SelectByName(name string) (*models.ShortUrl, error) {
-	ShortUrl := &models.ShortUrl{}
-	err := r.DB.Where("name = ?", name).First(ShortUrl).Error
-	if err != nil {
-		return nil, err
-	}
-	return ShortUrl, nil
 }

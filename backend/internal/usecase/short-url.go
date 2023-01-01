@@ -85,7 +85,7 @@ func (u *shortUrlUsecase) RetrieveOriginalUrl(shortUrl string) (string, error) {
 		return "", errors.New(payload.ERROR_SHORT_URL_NOT_FOUND)
 	}
 
-	return ShortUrl.PublicInfo().LongUrl, nil
+	return ShortUrl.PublicInfo(u.ServerInfo.BaseURL).LongUrl, nil
 }
 
 func (u *shortUrlUsecase) GetShortUrlById(id string) (*payload.ShortUrlInfo, error) {
@@ -93,7 +93,7 @@ func (u *shortUrlUsecase) GetShortUrlById(id string) (*payload.ShortUrlInfo, err
 	if err != nil {
 		return nil, err
 	}
-	return ShortUrl.PublicInfo(), nil
+	return ShortUrl.PublicInfo(u.ServerInfo.BaseURL), nil
 }
 
 func (u *shortUrlUsecase) ListShortUrl(userId string) ([]*payload.ShortUrlInfo, error) {
@@ -105,7 +105,7 @@ func (u *shortUrlUsecase) ListShortUrl(userId string) ([]*payload.ShortUrlInfo, 
 	ShortUrlInfos := make([]*payload.ShortUrlInfo, 0)
 
 	for _, ShortUrl := range ShortUrls {
-		ShortUrlInfos = append(ShortUrlInfos, ShortUrl.PublicInfo())
+		ShortUrlInfos = append(ShortUrlInfos, ShortUrl.PublicInfo(u.ServerInfo.BaseURL))
 	}
 
 	return ShortUrlInfos, nil
@@ -114,15 +114,9 @@ func (u *shortUrlUsecase) ListShortUrl(userId string) ([]*payload.ShortUrlInfo, 
 func (u *shortUrlUsecase) CreateShortUrl(userId string, req *payload.ShortUrlRequest) (*payload.ShortUrlInfo, error) {
 	var ShortUrl *models.ShortUrl
 	var err error
-	// check if name already exist
-	if req.Name == "" {
-		ShortUrl, err = u.Repo.ShortUrl.SelectByName(req.Name)
-		if err != nil && err != gorm.ErrRecordNotFound {
-			return nil, errors.New(payload.ERROR_CREATE_SHORT_URL_FAILED)
-		}
-		if ShortUrl != nil {
-			return nil, errors.New(payload.ERROR_SHORT_URL_NAME_ALREADY_EXIST)
-		}
+
+	if userId == "0" {
+		req.Name = ""
 	}
 
 	// insert to db
@@ -150,11 +144,11 @@ func (u *shortUrlUsecase) CreateShortUrl(userId string, req *payload.ShortUrlReq
 		return nil, errors.New(payload.ERROR_CREATE_SHORT_URL_FAILED)
 	}
 
-	return ShortUrl.PublicInfo(), nil
+	return ShortUrl.PublicInfo(u.ServerInfo.BaseURL), nil
 }
 
-func (u *shortUrlUsecase) DeleteShortUrl(shortUrl string) error {
-	ShortUrl, err := u.Repo.ShortUrl.SelectByShortUrl(shortUrl)
+func (u *shortUrlUsecase) DeleteShortUrl(id string) error {
+	ShortUrl, err := u.Repo.ShortUrl.SelectById(id)
 	if err != nil {
 		return err
 	}

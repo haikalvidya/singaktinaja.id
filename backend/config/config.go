@@ -18,6 +18,7 @@ type Config struct {
 type ServerConfig struct {
 	Address string `mapstructure:"address"`
 	Env     string `mapstructure:"env"`
+	BaseURL string `mapstructure:"base_url"`
 }
 
 type DatabaseConfig struct {

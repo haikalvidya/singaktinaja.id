@@ -14,7 +14,9 @@ type ShortUrl struct {
 	OriginalURL string         `db:"original_url"`
 	Name        string         `db:"name"`
 	UserId      string         `db:"user_id"`
-	ExpDate     time.Time      `db:"exp_date"`
+	Clicks      int            `db:"clicks"`
+	IsCostum    bool           `db:"is_costum"`
+	ExpDate     *time.Time     `db:"exp_date"`
 	CreatedAt   time.Time      `db:"created_at"`
 	UpdatedAt   *time.Time     `db:"updated_at"`
 	DeletedAt   gorm.DeletedAt `db:"deleted_at"`
@@ -39,8 +41,13 @@ func (u *ShortUrl) PublicInfo(baseUrl string) *payload.ShortUrlInfo {
 		ShortUrl:  u.ShortUrl,
 		LongUrl:   u.OriginalURL,
 		Name:      u.Name,
-		ExpDate:   u.ExpDate.Format("2006-01-02"),
 		CreatedAt: u.CreatedAt.Format("2006-01-02 15:04:05"),
+		Clicks:    u.Clicks,
+		IsCostum:  u.IsCostum,
+	}
+
+	if u.ExpDate != nil {
+		resp.ExpDate = u.ExpDate.Format("2006-01-02 15:04:05")
 	}
 
 	resp.ShortUrl = baseUrl + "/" + resp.ShortUrl

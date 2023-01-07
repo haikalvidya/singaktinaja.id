@@ -43,7 +43,14 @@ func Route(e *echo.Echo, delivery *Delivery, mid *middlewares.CustomMiddleware) 
 	e.POST("/register", delivery.User.RegisterUser)
 	e.POST("/login", delivery.User.LoginUser)
 	e.POST("/logout", delivery.User.LogoutUser, mid.JWT.ValidateJWT())
-	e.POST("/delete-account", delivery.User.DeleteUser, mid.JWT.ValidateJWT())
+
+	// user
+	user := e.Group("/user")
+	{
+		user.GET("", delivery.User.GetUser, mid.JWT.ValidateJWT())
+		user.PUT("", delivery.User.UpdateUser, mid.JWT.ValidateJWT())
+		user.DELETE("", delivery.User.DeleteUser, mid.JWT.ValidateJWT())
+	}
 
 	shortUrl := e.Group("/short-url")
 	{

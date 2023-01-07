@@ -70,6 +70,16 @@ func (d *userDelivery) LoginUser(c echo.Context) error {
 func (d *userDelivery) LogoutUser(c echo.Context) error {
 	res := common.Response{}
 
+	userId := d.Middleware.JWT.GetUserIdFromJwt(c)
+
+	err := d.Usecase.User.Logout(userId)
+	if err != nil {
+		res.Status = false
+		res.Message = err.Error()
+		return c.JSON(http.StatusBadRequest, res)
+	}
+
+	res.Message = "Success Logout"
 	return c.JSON(http.StatusOK, res)
 }
 
@@ -86,5 +96,47 @@ func (d *userDelivery) DeleteUser(c echo.Context) error {
 	}
 
 	res.Message = "Success Delete User"
+	return c.JSON(http.StatusOK, res)
+}
+
+func (d *userDelivery) UpdateUser(c echo.Context) error {
+	res := common.Response{}
+	req := &payload.UpdateUserRequest{}
+
+	c.Bind(req)
+
+	if err := c.Validate(req); err != nil {
+		res.Error = utils.GetErrorValidation(err)
+		res.Status = false
+		res.Message = "Failed Update User"
+		return c.JSON(http.StatusBadRequest, res)
+	}
+
+	userId := d.Middleware.JWT.GetUserIdFromJwt(c)
+
+	err := d.Usecase.User.UpdateUser(userId, req)
+	if err != nil {
+		res.Status = false
+		res.Message = err.Error()
+		return c.JSON(http.StatusBadRequest, res)
+	}
+
+	res.Message = "Success Update User"
+	return c.JSON(http.StatusOK, res)
+}
+
+func (d *userDelivery) GetUser(c echo.Context) error {
+	res := common.Response{}
+	userId := d.Middleware.JWT.GetUserIdFromJwt(c)
+
+	user, err := d.Usecase.User.GetUser(userId)
+	if err != nil {
+		res.Status = false
+		res.Message = err.Error()
+		return c.JSON(http.StatusBadRequest, res)
+	}
+
+	res.Message = "Success Get User"
+	res.Data = user
 	return c.JSON(http.StatusOK, res)
 }

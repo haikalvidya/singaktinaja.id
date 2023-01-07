@@ -22,6 +22,7 @@ type usecaseType struct {
 
 func NewUsecase(repo *repository.Repository, mid *middlewares.CustomMiddleware, redis *redis.Client, serverInfo *config.ServerConfig) *Usecase {
 	usc := &usecaseType{Repo: repo, Middleware: mid, RedisClient: redis, ServerInfo: serverInfo}
+
 	return &Usecase{
 		User:     (*userUsecase)(usc),
 		ShortUrl: (*shortUrlUsecase)(usc),

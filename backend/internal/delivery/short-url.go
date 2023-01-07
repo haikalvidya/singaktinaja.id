@@ -15,8 +15,9 @@ type shortUrlDelivery deliveryType
 func (d *shortUrlDelivery) GetShortUrlById(c echo.Context) error {
 	res := &common.Response{}
 	id := c.Param("id")
+	userId := d.Middleware.JWT.GetUserIdFromJwt(c)
 
-	ShortUrl, err := d.Usecase.ShortUrl.GetShortUrlById(id)
+	ShortUrl, err := d.Usecase.ShortUrl.GetShortUrlById(id, userId)
 	if err != nil {
 		res.Status = false
 		res.Message = err.Error()
@@ -110,8 +111,9 @@ func (d *shortUrlDelivery) DeleteShortUrl(c echo.Context) error {
 	res := &common.Response{}
 	id := c.Param("id")
 	fmt.Println(id)
+	userId := d.Middleware.JWT.GetUserIdFromJwt(c)
 
-	err := d.Usecase.ShortUrl.DeleteShortUrl(id)
+	err := d.Usecase.ShortUrl.DeleteShortUrl(id, userId)
 	if err != nil {
 		res.Status = false
 		res.Message = err.Error()

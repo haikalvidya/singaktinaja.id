@@ -19,6 +19,14 @@ type LoginUserRequest struct {
 	Password string `json:"password" validate:"required,min=8,max=32"`
 }
 
+type UpdateUserRequest struct {
+	FirstName *string `json:"first_name"`
+	LastName  *string `json:"last_name"`
+	Email     *string `json:"email" validate:"omitempty,email"`
+	Phone     *string `json:"phone" validate:"omitempty,numeric"`
+	Password  *string `json:"password" validate:"omitempty,min=8,max=32"`
+}
+
 type UserInfo struct {
 	ID        string `json:"id"`
 	FirstName string `json:"first_name"`
@@ -35,4 +43,5 @@ const (
 	ERROR_TOKEN_INVALID       = "invalid token"
 	ERROR_PASSWORD_NOT_MATCH  = "password not match"
 	ERROR_PHONE_ALREADY_EXIST = "phone already exist"
+	ERROR_USER_NOT_LOGGED_IN  = "user not logged in"
 )

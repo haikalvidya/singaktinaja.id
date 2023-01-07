@@ -9,7 +9,7 @@ type JenisPaketPublicInfo struct {
 	MicrositeAmount int     `json:"microsite_amount"`
 }
 
-type JenisPaketInfo struct {
+type JenisPaketInternalInfo struct {
 	ID              string  `json:"id"`
 	Nama            string  `json:"nama"`
 	Amount          float64 `json:"amount"`
@@ -18,6 +18,7 @@ type JenisPaketInfo struct {
 	MicrositeAmount int     `json:"microsite_amount"`
 	CreatedAt       string  `json:"created_at,omitempty"`
 	UpdatedAt       string  `json:"updated_at,omitempty"`
+	DeletedAt       string  `json:"deleted_at,omitempty"`
 }
 
 type JenisPaketRequest struct {
@@ -29,4 +30,13 @@ type JenisPaketRequest struct {
 }
 
 type JenisPaketUpdateRequest struct {
-	
+	Nama            *string  `json:"nama"`
+	Amount          *float64 `json:"amount"`
+	Disc            *float64 `json:"disc"`
+	CustomUrlAmount *int     `json:"custom_url_amount"`
+	MicrositeAmount *int     `json:"microsite_amount"`
+}
+
+const (
+	JENIS_PAKET_NOT_FOUND = "jenis Paket tidak ditemukan"
+)

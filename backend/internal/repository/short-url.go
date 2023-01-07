@@ -16,9 +16,9 @@ type IShortUrlRepository interface {
 	SelectByUserId(userId string) ([]*models.ShortUrl, error)
 }
 
-type ShortUrlRepository repositoryType
+type shortUrlRepository repositoryType
 
-func (r *ShortUrlRepository) SelectById(id string) (*models.ShortUrl, error) {
+func (r *shortUrlRepository) SelectById(id string) (*models.ShortUrl, error) {
 	ShortUrl := &models.ShortUrl{}
 	err := r.DB.Where("id = ?", id).First(ShortUrl).Error
 	if err != nil {
@@ -27,7 +27,7 @@ func (r *ShortUrlRepository) SelectById(id string) (*models.ShortUrl, error) {
 	return ShortUrl, nil
 }
 
-func (r *ShortUrlRepository) SelectByShortUrl(shortUrl string) (*models.ShortUrl, error) {
+func (r *shortUrlRepository) SelectByShortUrl(shortUrl string) (*models.ShortUrl, error) {
 	ShortUrl := &models.ShortUrl{}
 	err := r.DB.Where("short_url = ?", shortUrl).First(ShortUrl).Error
 	if err != nil {
@@ -36,7 +36,7 @@ func (r *ShortUrlRepository) SelectByShortUrl(shortUrl string) (*models.ShortUrl
 	return ShortUrl, nil
 }
 
-func (r *ShortUrlRepository) CreateTx(tx *gorm.DB, ShortUrl *models.ShortUrl) (*models.ShortUrl, error) {
+func (r *shortUrlRepository) CreateTx(tx *gorm.DB, ShortUrl *models.ShortUrl) (*models.ShortUrl, error) {
 	err := tx.Create(ShortUrl).Error
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (r *ShortUrlRepository) CreateTx(tx *gorm.DB, ShortUrl *models.ShortUrl) (*
 	return ShortUrl, nil
 }
 
-func (r *ShortUrlRepository) SelectByLongUrl(longUrl string) (*models.ShortUrl, error) {
+func (r *shortUrlRepository) SelectByLongUrl(longUrl string) (*models.ShortUrl, error) {
 	ShortUrl := &models.ShortUrl{}
 	err := r.DB.Where("long_url = ?", longUrl).First(ShortUrl).Error
 	if err != nil {
@@ -53,7 +53,7 @@ func (r *ShortUrlRepository) SelectByLongUrl(longUrl string) (*models.ShortUrl, 
 	return ShortUrl, nil
 }
 
-func (r *ShortUrlRepository) DeleteTx(tx *gorm.DB, ShortUrl *models.ShortUrl) error {
+func (r *shortUrlRepository) DeleteTx(tx *gorm.DB, ShortUrl *models.ShortUrl) error {
 	err := tx.Delete(ShortUrl).Error
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func (r *ShortUrlRepository) DeleteTx(tx *gorm.DB, ShortUrl *models.ShortUrl) er
 	return nil
 }
 
-func (r *ShortUrlRepository) SelectByUserId(userId string) ([]*models.ShortUrl, error) {
+func (r *shortUrlRepository) SelectByUserId(userId string) ([]*models.ShortUrl, error) {
 	ShortUrls := []*models.ShortUrl{}
 	err := r.DB.Where("user_id = ?", userId).Find(&ShortUrls).Error
 	if err != nil {
@@ -70,7 +70,7 @@ func (r *ShortUrlRepository) SelectByUserId(userId string) ([]*models.ShortUrl, 
 	return ShortUrls, nil
 }
 
-func (r *ShortUrlRepository) Update(ShortUrl *models.ShortUrl) (*models.ShortUrl, error) {
+func (r *shortUrlRepository) Update(ShortUrl *models.ShortUrl) (*models.ShortUrl, error) {
 	err := r.DB.Save(ShortUrl).Error
 	if err != nil {
 		return nil, err

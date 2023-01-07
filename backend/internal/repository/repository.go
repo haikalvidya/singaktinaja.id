@@ -8,6 +8,7 @@ type Repository struct {
 	User       IUserRepository
 	ShortUrl   IShortUrlRepository
 	TrackClick ITrackClickRepository
+	JenisPaket IJenisPaketRepository
 	Tx         Tx
 }
 
@@ -49,8 +50,9 @@ func NewRepository(db *gorm.DB) *Repository {
 	repo := &repositoryType{DB: db}
 	return &Repository{
 		User:       (*userRepository)(repo),
-		ShortUrl:   (*ShortUrlRepository)(repo),
-		TrackClick: (*TrackClickRepository)(repo),
+		ShortUrl:   (*shortUrlRepository)(repo),
+		TrackClick: (*trackClickRepository)(repo),
+		JenisPaket: (*jenisPaketRepository)(repo),
 		Tx:         &tx{DB: db},
 	}
 }

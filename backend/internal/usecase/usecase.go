@@ -9,8 +9,9 @@ import (
 )
 
 type Usecase struct {
-	User     IUserUsecase
-	ShortUrl IShortUrlUsecase
+	User       IUserUsecase
+	ShortUrl   IShortUrlUsecase
+	JenisPaket IJenisPaketUsecase
 }
 
 type usecaseType struct {
@@ -24,7 +25,8 @@ func NewUsecase(repo *repository.Repository, mid *middlewares.CustomMiddleware, 
 	usc := &usecaseType{Repo: repo, Middleware: mid, RedisClient: redis, ServerInfo: serverInfo}
 
 	return &Usecase{
-		User:     (*userUsecase)(usc),
-		ShortUrl: (*shortUrlUsecase)(usc),
+		User:       (*userUsecase)(usc),
+		ShortUrl:   (*shortUrlUsecase)(usc),
+		JenisPaket: (*jenisPaketUsecase)(usc),
 	}
 }

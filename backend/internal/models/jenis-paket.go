@@ -1,6 +1,7 @@
 package models
 
 import (
+	"singkatinaja/internal/delivery/payload"
 	"time"
 
 	"github.com/google/uuid"
@@ -27,4 +28,33 @@ func (j *JenisPaket) BeforeCreate(tx *gorm.DB) (err error) {
 
 func (JenisPaket) TableName() string {
 	return "jenis_paket"
+}
+
+func (j *JenisPaket) PublicInfo() *payload.JenisPaketPublicInfo {
+	resp := &payload.JenisPaketPublicInfo{
+		ID:              j.ID,
+		Nama:            j.Nama,
+		Amount:          j.Amount,
+		Disc:            j.Disc,
+		CustomUrlAmount: j.CustomUrlAmount,
+		MicrositeAmount: j.MicrositeAmount,
+	}
+
+	return resp
+}
+
+func (j *JenisPaket) PrivateInfo() *payload.JenisPaketInternalInfo {
+	resp := &payload.JenisPaketInternalInfo{
+		ID:              j.ID,
+		Nama:            j.Nama,
+		Amount:          j.Amount,
+		Disc:            j.Disc,
+		CustomUrlAmount: j.CustomUrlAmount,
+		MicrositeAmount: j.MicrositeAmount,
+		CreatedAt:       j.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:       j.UpdatedAt.Format("2006-01-02 15:04:05"),
+		DeletedAt:       j.DeletedAt.Time.Format("2006-01-02 15:04:05"),
+	}
+
+	return resp
 }

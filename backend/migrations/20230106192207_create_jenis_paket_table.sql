@@ -6,8 +6,12 @@ CREATE TABLE `jenis_paket` (
     `disc` INT NULL DEFAULT 0,
     `custom_url_amount` INT NULL DEFAULT 0,
     `microsite_amount` INT NULL DEFAULT 0,
+    `lama_paket` INT NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NULL,
     `deleted_at` TIMESTAMP NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- migrate:down
+DROP TABLE `jenis_paket`;

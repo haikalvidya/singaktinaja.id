@@ -14,6 +14,7 @@ type IShortUrlRepository interface {
 	DeleteTx(tx *gorm.DB, ShortUrl *models.ShortUrl) error
 	Update(ShortUrl *models.ShortUrl) (*models.ShortUrl, error)
 	SelectByUserId(userId string) ([]*models.ShortUrl, error)
+	GetShortUrlCostumAmount(userId string) (int, error)
 }
 
 type shortUrlRepository repositoryType
@@ -76,4 +77,13 @@ func (r *shortUrlRepository) Update(ShortUrl *models.ShortUrl) (*models.ShortUrl
 		return nil, err
 	}
 	return ShortUrl, nil
+}
+
+func (r *shortUrlRepository) GetShortUrlCostumAmount(userId string) (int, error) {
+	var count int64
+	err := r.DB.Model(&models.ShortUrl{}).Where("user_id = ? AND is_custom = ?", userId, true).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return int(count), nil
 }

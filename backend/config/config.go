@@ -8,17 +8,19 @@ const (
 )
 
 type Config struct {
-	Server   ServerConfig   `mapstructure:"server"`
-	Database DatabaseConfig `mapstructure:"database"`
-	Mail     MailConfig     `mapstructure:"mail"`
-	JWT      JWTConfig      `mapstructure:"jwt"`
-	Redis    RedisConfig    `mapstructure:"redis"`
+	Server         ServerConfig         `mapstructure:"server"`
+	Database       DatabaseConfig       `mapstructure:"database"`
+	Mail           MailConfig           `mapstructure:"mail"`
+	JWT            JWTConfig            `mapstructure:"jwt"`
+	Redis          RedisConfig          `mapstructure:"redis"`
+	PaymentGateway PaymentGatewayConfig `mapstructure:"payment_gateway"`
 }
 
 type ServerConfig struct {
-	Address string `mapstructure:"address"`
-	Env     string `mapstructure:"env"`
-	BaseURL string `mapstructure:"base_url"`
+	Address           string `mapstructure:"address"`
+	Env               string `mapstructure:"env"`
+	BaseURL           string `mapstructure:"base_url"`
+	InternalAccessKey string `mapstructure:"internal_access_key"`
 }
 
 type DatabaseConfig struct {
@@ -46,6 +48,11 @@ type RedisConfig struct {
 	Port     string `mapstructure:"port"`
 	Password string `mapstructure:"password"`
 	DB       int    `mapstructure:"db"`
+}
+
+type PaymentGatewayConfig struct {
+	ApiKey        string `mapstructure:"api_key"`
+	CallbackToken string `mapstructure:"callback_token"`
 }
 
 func Load(cfgName string, paths ...string) (c *Config, err error) {

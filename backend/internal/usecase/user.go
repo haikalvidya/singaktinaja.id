@@ -51,10 +51,15 @@ func (u *userUsecase) Register(req *payload.RegisterUserRequest) (*payload.UserW
 
 	password, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	userModel := &models.UserModel{
-		Email:     req.Email,
-		Password:  string(password),
-		FirstName: req.FirstName,
-		LastName:  req.LastName,
+		Email:        req.Email,
+		Password:     string(password),
+		FirstName:    req.FirstName,
+		LastName:     req.LastName,
+		JenisPaketId: "0",
+	}
+
+	if req.Phone != nil {
+		userModel.Phone = req.Phone
 	}
 
 	err = u.Repo.Tx.DoInTransaction(func(tx *gorm.DB) error {

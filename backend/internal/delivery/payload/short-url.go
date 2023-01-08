@@ -16,13 +16,14 @@ type ShortUrlInfo struct {
 }
 
 const (
-	ERROR_SHORT_URL_NOT_FOUND          = "short url not found"
-	ERROR_SHORT_URL_EXIST              = "short url already exist"
-	ERROR_SHORT_URL_INVALID            = "invalid short url"
-	ERROR_CREATE_SHORT_URL_FAILED      = "failed to create short url"
-	ERROR_SHORT_URL_NAME_ALREADY_EXIST = "short url name already exist"
-	ERROR_SHORT_URL_EXPIRED            = "short url expired"
-	ERROR_SHORT_URL_ALREADY_EXIST      = "short url already exist"
+	ERROR_SHORT_URL_NOT_FOUND              = "short url not found"
+	ERROR_SHORT_URL_EXIST                  = "short url already exist"
+	ERROR_SHORT_URL_INVALID                = "invalid short url"
+	ERROR_CREATE_SHORT_URL_FAILED          = "failed to create short url"
+	ERROR_SHORT_URL_NAME_ALREADY_EXIST     = "short url name already exist"
+	ERROR_SHORT_URL_EXPIRED                = "short url expired"
+	ERROR_SHORT_URL_ALREADY_EXIST          = "short url already exist"
+	ERROR_SHORT_URL_COSTUM_AMOUNT_EXCEEDED = "short url costum amount exceeded"
 )
 
 type ShortUrlRequest struct {

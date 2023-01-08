@@ -193,6 +193,26 @@ func (u *shortUrlUsecase) CreateShortUrl(userId string, req *payload.ShortUrlReq
 		if !u.isShortUrlValid(req.ShortUrl) {
 			return nil, errors.New(payload.ERROR_SHORT_URL_INVALID)
 		}
+
+		// get user
+		user, err := u.Repo.User.SelectByID(userId)
+		if err != nil {
+			return nil, err
+		}
+		// get jenis paket
+		jenisPaket, err := u.Repo.JenisPaket.GetByID(user.JenisPaketId)
+		if err != nil {
+			return nil, err
+		}
+		// check if short url costum amount is not exceeded
+		// get short url costum amount
+		shortUrlCostumAmount, err := u.Repo.ShortUrl.GetShortUrlCostumAmount(userId)
+		if err != nil {
+			return nil, err
+		}
+		if jenisPaket.CustomUrlAmount <= shortUrlCostumAmount {
+			return nil, errors.New(payload.ERROR_SHORT_URL_COSTUM_AMOUNT_EXCEEDED)
+		}
 		ShortUrl.ShortUrl = req.ShortUrl
 		ShortUrl.IsCostum = true
 	}

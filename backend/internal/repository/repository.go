@@ -5,11 +5,13 @@ import (
 )
 
 type Repository struct {
-	User       IUserRepository
-	ShortUrl   IShortUrlRepository
-	TrackClick ITrackClickRepository
-	JenisPaket IJenisPaketRepository
-	Tx         Tx
+	User         IUserRepository
+	ShortUrl     IShortUrlRepository
+	TrackClick   ITrackClickRepository
+	JenisPaket   IJenisPaketRepository
+	Payment      IPaymentRepository
+	Subscription ISubscriptionRepository
+	Tx           Tx
 }
 
 type repositoryType struct {
@@ -49,10 +51,12 @@ func (t *tx) DoInTransaction(fn func(tx *gorm.DB) error) (err error) {
 func NewRepository(db *gorm.DB) *Repository {
 	repo := &repositoryType{DB: db}
 	return &Repository{
-		User:       (*userRepository)(repo),
-		ShortUrl:   (*shortUrlRepository)(repo),
-		TrackClick: (*trackClickRepository)(repo),
-		JenisPaket: (*jenisPaketRepository)(repo),
-		Tx:         &tx{DB: db},
+		User:         (*userRepository)(repo),
+		ShortUrl:     (*shortUrlRepository)(repo),
+		TrackClick:   (*trackClickRepository)(repo),
+		JenisPaket:   (*jenisPaketRepository)(repo),
+		Payment:      (*paymentRepository)(repo),
+		Subscription: (*subscriptionRepository)(repo),
+		Tx:           &tx{DB: db},
 	}
 }

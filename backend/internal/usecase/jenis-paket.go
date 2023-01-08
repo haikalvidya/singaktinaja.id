@@ -37,6 +37,9 @@ func (u *jenisPaketUsecase) GetPublicAll() ([]*payload.JenisPaketPublicInfo, err
 	for _, v := range jenisPaket {
 		jenisPaketPublicInfo = append(jenisPaketPublicInfo, v.PublicInfo())
 	}
+	if len(jenisPaketPublicInfo) == 0 {
+		jenisPaketPublicInfo = []*payload.JenisPaketPublicInfo{}
+	}
 	return jenisPaketPublicInfo, nil
 }
 
@@ -57,6 +60,9 @@ func (u *jenisPaketUsecase) GetInternalAll() ([]*payload.JenisPaketInternalInfo,
 	for _, v := range jenisPaket {
 		jenisPaketInternalInfo = append(jenisPaketInternalInfo, v.PrivateInfo())
 	}
+	if len(jenisPaketInternalInfo) == 0 {
+		jenisPaketInternalInfo = []*payload.JenisPaketInternalInfo{}
+	}
 	return jenisPaketInternalInfo, nil
 }
 
@@ -67,6 +73,7 @@ func (u *jenisPaketUsecase) Create(req *payload.JenisPaketRequest) (*payload.Jen
 		Disc:            req.Disc,
 		CustomUrlAmount: req.CustomUrlAmount,
 		MicrositeAmount: req.MicrositeAmount,
+		LamaPaket:       req.LamaPaket,
 	}
 	jenisPaket, err := u.Repo.JenisPaket.Create(jenisPaketModel)
 	if err != nil {
@@ -90,14 +97,18 @@ func (u *jenisPaketUsecase) Update(id string, req *payload.JenisPaketUpdateReque
 		jenisPaket.Nama = *req.Nama
 	}
 
-	if req.Amount != nil {
+	if req.Amount != nil && jenisPaket.Amount != *req.Amount {
 		jenisPaket.Amount = *req.Amount
 		isMajorChange = true
 	}
 
-	if req.Disc != nil {
+	if req.Disc != nil && jenisPaket.Disc != *req.Disc {
 		jenisPaket.Disc = *req.Disc
 		isMajorChange = true
+	}
+
+	if req.LamaPaket != nil {
+		jenisPaket.LamaPaket = *req.LamaPaket
 	}
 
 	if req.CustomUrlAmount != nil {

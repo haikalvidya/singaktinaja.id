@@ -1,7 +1,6 @@
 package delivery
 
 import (
-	"fmt"
 	"net/http"
 	"singkatinaja/internal/delivery/payload"
 	"singkatinaja/pkg/common"
@@ -110,7 +109,6 @@ func (d *shortUrlDelivery) GetListUrls(c echo.Context) error {
 func (d *shortUrlDelivery) DeleteShortUrl(c echo.Context) error {
 	res := &common.Response{}
 	id := c.Param("id")
-	fmt.Println(id)
 	userId := d.Middleware.JWT.GetUserIdFromJwt(c)
 
 	err := d.Usecase.ShortUrl.DeleteShortUrl(id, userId)

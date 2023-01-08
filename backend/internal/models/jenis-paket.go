@@ -15,6 +15,7 @@ type JenisPaket struct {
 	Disc            float64        `db:"disc"`
 	CustomUrlAmount int            `db:"custom_url_amount"`
 	MicrositeAmount int            `db:"microsite_amount"`
+	LamaPaket       int            `db:"lama_paket"`
 	CreatedAt       time.Time      `db:"created_at"`
 	UpdatedAt       *time.Time     `db:"updated_at"`
 	DeletedAt       gorm.DeletedAt `db:"deleted_at"`

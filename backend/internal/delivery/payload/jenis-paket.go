@@ -7,6 +7,7 @@ type JenisPaketPublicInfo struct {
 	Disc            float64 `json:"disc"`
 	CustomUrlAmount int     `json:"custom_url_amount"`
 	MicrositeAmount int     `json:"microsite_amount"`
+	LamaPaket       int     `json:"lama_paket"`
 }
 
 type JenisPaketInternalInfo struct {
@@ -16,6 +17,7 @@ type JenisPaketInternalInfo struct {
 	Disc            float64 `json:"disc"`
 	CustomUrlAmount int     `json:"custom_url_amount"`
 	MicrositeAmount int     `json:"microsite_amount"`
+	LamaPaket       int     `json:"lama_paket"`
 	CreatedAt       string  `json:"created_at,omitempty"`
 	UpdatedAt       string  `json:"updated_at,omitempty"`
 	DeletedAt       string  `json:"deleted_at,omitempty"`
@@ -24,9 +26,10 @@ type JenisPaketInternalInfo struct {
 type JenisPaketRequest struct {
 	Nama            string  `json:"nama" validate:"required"`
 	Amount          float64 `json:"amount" validate:"required"`
-	Disc            float64 `json:"disc" validate:"required"`
+	Disc            float64 `json:"disc"`
 	CustomUrlAmount int     `json:"custom_url_amount" validate:"required"`
 	MicrositeAmount int     `json:"microsite_amount" validate:"required"`
+	LamaPaket       int     `json:"lama_paket" validate:"required"`
 }
 
 type JenisPaketUpdateRequest struct {
@@ -35,6 +38,7 @@ type JenisPaketUpdateRequest struct {
 	Disc            *float64 `json:"disc"`
 	CustomUrlAmount *int     `json:"custom_url_amount"`
 	MicrositeAmount *int     `json:"microsite_amount"`
+	LamaPaket       *int     `json:"lama_paket"`
 }
 
 const (

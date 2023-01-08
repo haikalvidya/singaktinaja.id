@@ -16,8 +16,18 @@ type jwtImpl interface {
 }
 
 type CustomMiddleware struct {
-	JWT    jwtImpl
-	Logger logger.Logger
+	JWT            jwtImpl
+	Logger         logger.Logger
+	InternalAccess internalconnection
+	PaymentGateway PaymentGatewayMiddleware
+}
+
+type internalconnection interface {
+	ValidateInternalAccess(next echo.HandlerFunc) echo.HandlerFunc
+}
+
+type customMiddleware struct {
+	Config *config.Config
 }
 
 func New(cfg *config.Config) *CustomMiddleware {
@@ -26,8 +36,16 @@ func New(cfg *config.Config) *CustomMiddleware {
 
 	logger := logger.NewApiLogger(cfg)
 
+	internalconnection := middleware.NewInternalAccess(cfg.Server.InternalAccessKey)
+
+	middleware := &customMiddleware{
+		Config: cfg,
+	}
+
 	return &CustomMiddleware{
-		JWT:    jwt,
-		Logger: logger,
+		JWT:            jwt,
+		Logger:         logger,
+		InternalAccess: internalconnection,
+		PaymentGateway: (*paymentGatewayMiddleware)(middleware),
 	}
 }

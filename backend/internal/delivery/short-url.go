@@ -45,7 +45,7 @@ func (d *shortUrlDelivery) RetrieveOriginalUrl(c echo.Context) error {
 	res.Data = LongUrl
 	res.Status = true
 
-	c.Redirect(http.StatusMovedPermanently, LongUrl)
+	c.Redirect(http.StatusMovedPermanently, "http://"+LongUrl)
 	return c.JSON(http.StatusOK, res)
 }
 

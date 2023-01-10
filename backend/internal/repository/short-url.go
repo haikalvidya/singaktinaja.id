@@ -81,7 +81,7 @@ func (r *shortUrlRepository) Update(ShortUrl *models.ShortUrl) (*models.ShortUrl
 
 func (r *shortUrlRepository) GetShortUrlCostumAmount(userId string) (int, error) {
 	var count int64
-	err := r.DB.Model(&models.ShortUrl{}).Where("user_id = ? AND is_custom = ?", userId, true).Count(&count).Error
+	err := r.DB.Model(&models.ShortUrl{}).Where("user_id = ? AND is_costum = ?", userId, true).Count(&count).Error
 	if err != nil {
 		return 0, err
 	}

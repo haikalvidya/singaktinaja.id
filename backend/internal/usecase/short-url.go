@@ -158,6 +158,7 @@ func (u *shortUrlUsecase) ListShortUrl(userId string) ([]*payload.ShortUrlInfo, 
 func (u *shortUrlUsecase) CreateShortUrl(userId string, req *payload.ShortUrlRequest) (*payload.ShortUrlInfo, error) {
 	var ShortUrl *models.ShortUrl
 	var err error
+	var user *models.UserModel
 
 	if userId == "0" {
 		req.Name = ""
@@ -169,6 +170,14 @@ func (u *shortUrlUsecase) CreateShortUrl(userId string, req *payload.ShortUrlReq
 		if err != nil {
 			return nil, errors.New(payload.ERROR_USER_NOT_LOGGED_IN)
 		}
+		// get user
+		user, err = u.Repo.User.SelectByID(userId)
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return nil, err
+		}
+		if user == nil {
+			return nil, errors.New(payload.ERROR_USER_INVALID)
+		}
 	}
 
 	// insert to db
@@ -176,16 +185,17 @@ func (u *shortUrlUsecase) CreateShortUrl(userId string, req *payload.ShortUrlReq
 		OriginalURL: req.LongUrl,
 		UserId:      userId,
 		ShortUrl:    u.generateShortUrl(),
+		IsCostum:    false,
 	}
 
-	if req.ShortUrl != "" {
+	if req.ShortUrl != "" && user.JenisPaketId != "0" {
 		// check if short url already exist
-		ShortUrl, err := u.Repo.ShortUrl.SelectByShortUrl(req.ShortUrl)
+		ShortUrlCheck, err := u.Repo.ShortUrl.SelectByShortUrl(req.ShortUrl)
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return nil, err
 		}
 
-		if ShortUrl != nil {
+		if ShortUrlCheck != nil {
 			return nil, errors.New(payload.ERROR_SHORT_URL_ALREADY_EXIST)
 		}
 
@@ -194,11 +204,6 @@ func (u *shortUrlUsecase) CreateShortUrl(userId string, req *payload.ShortUrlReq
 			return nil, errors.New(payload.ERROR_SHORT_URL_INVALID)
 		}
 
-		// get user
-		user, err := u.Repo.User.SelectByID(userId)
-		if err != nil {
-			return nil, err
-		}
 		// get jenis paket
 		jenisPaket, err := u.Repo.JenisPaket.GetByID(user.JenisPaketId)
 		if err != nil {

@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"fmt"
 	"singkatinaja/internal/delivery/payload"
 	"singkatinaja/internal/models"
 
@@ -36,7 +35,6 @@ func (u *paymentUsecase) CallbackInvoice(req *payload.XenditCallbackInvoice) err
 			return err
 		}
 		// update user jenis_paket_id
-		fmt.Println("payment.UserId", payment.UserId)
 		user, err := u.Repo.User.SelectByID(payment.UserId)
 		if err != nil {
 			return err

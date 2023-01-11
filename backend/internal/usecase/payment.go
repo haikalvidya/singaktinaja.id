@@ -1,19 +1,24 @@
 package usecase
 
 import (
+	"errors"
+	"fmt"
 	"singkatinaja/internal/delivery/payload"
 	"singkatinaja/internal/models"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type IPaymentUsecase interface {
 	CallbackInvoice(req *payload.XenditCallbackInvoice) error
+	GetPaymentByUserId(userId string) ([]*payload.PaymentInfo, error)
 }
 
 type paymentUsecase usecaseType
 
 func (u *paymentUsecase) CallbackInvoice(req *payload.XenditCallbackInvoice) error {
+	now := time.Now()
 	payment, err := u.Repo.Payment.SelectByXenditRefId(req.ExternalId)
 	if err != nil {
 		return err
@@ -30,6 +35,7 @@ func (u *paymentUsecase) CallbackInvoice(req *payload.XenditCallbackInvoice) err
 	// DO IN TRANSACTION
 	err = u.Repo.Tx.DoInTransaction(func(tx *gorm.DB) error {
 		payment.Status = models.STATUS_PAYMENT_PAID
+		payment.PaidAt = &now
 		err := u.Repo.Payment.UpdateTx(tx, payment)
 		if err != nil {
 			return err
@@ -63,4 +69,26 @@ func (u *paymentUsecase) CallbackInvoice(req *payload.XenditCallbackInvoice) err
 		return nil
 	})
 	return err
+}
+
+func (u *paymentUsecase) GetPaymentByUserId(userId string) ([]*payload.PaymentInfo, error) {
+	// check if user login
+	_, err := u.RedisClient.Get(userId).Result()
+	if err != nil {
+		return nil, errors.New(payload.ERROR_USER_NOT_LOGGED_IN)
+	}
+
+	payment, err := u.Repo.Payment.SelectByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	paymentList := make([]*payload.PaymentInfo, 0)
+	for _, p := range payment {
+		pModel := *p
+		fmt.Println(pModel.PublicInfo())
+		paymentList = append(paymentList, pModel.PublicInfo())
+	}
+
+	return paymentList, nil
 }

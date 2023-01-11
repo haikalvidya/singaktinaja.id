@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"singkatinaja/internal/delivery/payload"
 	"singkatinaja/internal/models"
 	"strconv"
@@ -215,11 +216,11 @@ func (u *shortUrlUsecase) CreateShortUrl(userId string, req *payload.ShortUrlReq
 		if err != nil {
 			return nil, err
 		}
-		if jenisPaket.CustomUrlAmount <= shortUrlCostumAmount {
-			return nil, errors.New(payload.ERROR_SHORT_URL_COSTUM_AMOUNT_EXCEEDED)
+		fmt.Println(jenisPaket.CustomUrlAmount, shortUrlCostumAmount)
+		if jenisPaket.CustomUrlAmount > shortUrlCostumAmount {
+			ShortUrl.ShortUrl = req.ShortUrl
+			ShortUrl.IsCostum = true
 		}
-		ShortUrl.ShortUrl = req.ShortUrl
-		ShortUrl.IsCostum = true
 	}
 
 	if req.Name != "" {

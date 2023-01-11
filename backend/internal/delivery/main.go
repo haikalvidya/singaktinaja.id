@@ -98,4 +98,9 @@ func Route(e *echo.Echo, delivery *Delivery, mid *middlewares.CustomMiddleware) 
 		// invoice xendit
 		callback.POST("/invoice", delivery.Payment.XenditInvoiceCallback)
 	}
+
+	payment := e.Group("/payment")
+	{
+		payment.GET("", delivery.Payment.GetPaymentByUserId, mid.JWT.ValidateJWT())
+	}
 }

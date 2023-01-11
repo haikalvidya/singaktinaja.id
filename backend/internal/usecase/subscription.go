@@ -91,6 +91,7 @@ func (u *subscriptionUsecase) CreateSubscription(userId string, Subscription *pa
 		}
 		// update payment
 		paymentModel.XenditRefId = theInvoice.ExternalID
+		paymentModel.ExpiredDate = theInvoice.ExpiryDate
 
 		err = u.Repo.Payment.UpdateTx(tx, paymentModel)
 		if err != nil {

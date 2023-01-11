@@ -1,6 +1,7 @@
 package models
 
 import (
+	"singkatinaja/internal/delivery/payload"
 	"time"
 
 	"github.com/google/uuid"
@@ -30,17 +31,25 @@ func (p *Payment) TableName() string {
 	return "payments"
 }
 
-func (p *Payment) PublicInfo() *Payment {
-	return &Payment{
+func (p *Payment) PublicInfo() *payload.PaymentInfo {
+	resp := &payload.PaymentInfo{
 		ID:          p.ID,
 		UserId:      p.UserId,
 		AmountTotal: p.AmountTotal,
 		Status:      p.Status,
-		PaidAt:      p.PaidAt,
-		CreatedAt:   p.CreatedAt,
-		UpdatedAt:   p.UpdatedAt,
-		DeletedAt:   p.DeletedAt,
+		XenditRefId: p.XenditRefId,
+		CreatedAt:   p.CreatedAt.Format("2006-01-02 15:04:05"),
 	}
+	if p.ExpiredDate != nil {
+		p.ExpiredDate.Format("2006-01-02 15:04:05")
+	}
+	if p.PaidAt != nil {
+		p.PaidAt.Format("2006-01-02 15:04:05")
+	}
+	if p.UpdatedAt != nil {
+		p.UpdatedAt.Format("2006-01-02 15:04:05")
+	}
+	return resp
 }
 
 type XenditResp struct {

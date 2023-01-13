@@ -17,11 +17,6 @@ class PostRegister extends RegistrasiEvent {
     this.passwordConfirmation,
   });
   @override
-  List<Object?> get props => [
-        email,
-        firstName,
-        lastName,
-        password,
-        passwordConfirmation,
-      ];
+  List<Object?> get props =>
+      [email, firstName, lastName, password, passwordConfirmation];
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_singkatin/feature/auth/auth_ui/signup_page.dart';
 import 'package:flutter_application_singkatin/feature/shortlink/shortlink_bloc/handle_api/payment_bloc.dart';
 import 'package:flutter_application_singkatin/feature/shortlink/shortlink_bloc/handle_api/create_short_url_bloc.dart';
@@ -113,13 +114,28 @@ class _HomeUnAuthorizedPageState extends State<HomeUnAuthorizedPage> {
                         content: SingleChildScrollView(
                           child: ListBody(
                             children: [
-                              Text(
-                                state.responseCreateShortUrl!.data!.shortUrl!,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(
-                                  fontSize: 12,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w600,
+                              GestureDetector(
+                                onTap: () async {
+                                  await Clipboard.setData(
+                                    ClipboardData(
+                                      text: state.responseCreateShortUrl!.data!
+                                          .shortUrl!,
+                                    ),
+                                  );
+                                  Fluttertoast.showToast(
+                                    msg: "Copy ke Clipboard",
+                                    textColor: ColorHelper.primary,
+                                    backgroundColor: Colors.white,
+                                  );
+                                },
+                                child: Text(
+                                  state.responseCreateShortUrl!.data!.shortUrl!,
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 12,
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ],

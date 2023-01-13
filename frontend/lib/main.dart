@@ -41,6 +41,7 @@ class SplashScreenPage extends StatefulWidget {
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
+  
   void initState() {
     Timer(const Duration(seconds: 3), () async {
       final TokenHelper _tokenHelper = TokenHelper();

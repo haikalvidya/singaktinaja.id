@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_application_singkatin/feature/auth/auth_bloc/bloc/get_user_bloc.dart';
 import 'package:flutter_application_singkatin/feature/auth/auth_ui/signup_page.dart';
+import 'package:flutter_application_singkatin/feature/auth/auth_ui/update_page.dart';
 import 'package:flutter_application_singkatin/feature/shortlink/shortlink_bloc/handle_api/create_short_url_auth_bloc.dart';
 import 'package:flutter_application_singkatin/feature/shortlink/shortlink_bloc/handle_api/create_short_url_bloc.dart';
 import 'package:flutter_application_singkatin/feature/shortlink/shortlink_bloc/handle_api/delete_url_bloc.dart';
@@ -27,6 +30,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _getUserBloc = GetUserBloc();
+
   final _createUrlBloc = CreateShortUrlBloc();
   final _createUrlAuthBloc = CreateShortUrlAuthBloc();
   final _longUrlController = TextEditingController(text: '');
@@ -40,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _getActivateSubs.add(GetActiveSubs());
+    _getUserBloc.add(GetUser());
     // Future.delayed(Duration.zero, () async {
     //   final TokenHelper _tokenHelper = TokenHelper();
     //   String token = await _tokenHelper.getToken();
@@ -73,60 +79,90 @@ class _HomePageState extends State<HomePage> {
       key: _key,
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      endDrawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.all(0.0),
-          children: [
-            const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: ColorHelper.primary,
-              ),
-              accountName: Text("Nilesh Rathod"),
-              accountEmail: Text("nilesh@gmail.com"),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Text("Nilu"),
-              ),
-            ),
-            ListTile(
-              title: Text("Links"),
-              trailing: Icon(Icons.list_rounded),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LinksPage(),
+      endDrawer: BlocConsumer<GetUserBloc, GetUserState>(
+        bloc: _getUserBloc,
+        listener: (context, state) {
+          debugPrint('state is $state');
+        },
+        builder: (context, state) {
+          if (state is GetUserLoading) {
+          } else if (state is GetUserSuccess) {
+            return Drawer(
+              child: ListView(
+                padding: const EdgeInsets.all(0.0),
+                children: [
+                  UserAccountsDrawerHeader(
+                    decoration: const BoxDecoration(
+                      color: ColorHelper.primary,
+                    ),
+                    accountName: Text(
+                      "${state.responseGetUser!.data!.firstName}"
+                      " ${state.responseGetUser!.data!.lastName}",
+                      style: GoogleFonts.montserrat(color: Colors.white),
+                    ),
+                    accountEmail: Text(
+                      state.responseGetUser!.data!.email!,
+                    ),
+                    currentAccountPicture: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Text(
+                        state.responseGetUser!.data!.firstName!,
+                        style: GoogleFonts.montserrat(color: Colors.black),
+                      ),
+                    ),
                   ),
-                );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              title: const Text("Update Profile"),
-              trailing: const Icon(Icons.person),
-              onTap: () => {},
-            ),
-            const Divider(),
-            ListTile(
-              title: const Text("Subscription"),
-              trailing: const Icon(Icons.money_rounded),
-              onTap: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PackPage(),
+                  ListTile(
+                    title: const Text("Links"),
+                    trailing: const Icon(Icons.list_rounded),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LinksPage(),
+                        ),
+                      );
+                    },
                   ),
-                )
-              },
-            ),
-            const Divider(),
-            ListTile(
-              title: const Text("Logout"),
-              trailing: const Icon(Icons.logout),
-              onTap: () => _logout(),
-            ),
-          ],
-        ),
+                  const Divider(),
+                  ListTile(
+                    title: const Text("Update Profile"),
+                    trailing: const Icon(Icons.person),
+                    onTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UpdateUserPage(
+                            user: state.responseGetUser!,
+                          ),
+                        ),
+                      )
+                    },
+                  ),
+                  const Divider(),
+                  ListTile(
+                    title: const Text("Subscription"),
+                    trailing: const Icon(Icons.money_rounded),
+                    onTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PackPage(),
+                        ),
+                      )
+                    },
+                  ),
+                  const Divider(),
+                  ListTile(
+                    title: const Text("Logout"),
+                    trailing: const Icon(Icons.logout),
+                    onTap: () => _logout(),
+                  ),
+                ],
+              ),
+            );
+          } else if (state is GetUserError) {}
+          return const SizedBox();
+        },
       ),
       appBar: AppBar(
         elevation: 0,
@@ -236,14 +272,29 @@ class _HomePageState extends State<HomePage> {
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: [
-                                    Text(
-                                      state.responseCreateShortUrl!.data!
-                                          .shortUrl!,
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 12,
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.w600,
+                                    GestureDetector(
+                                      onTap: () async {
+                                        await Clipboard.setData(
+                                          ClipboardData(
+                                            text: state.responseCreateShortUrl!
+                                                .data!.shortUrl!,
+                                          ),
+                                        );
+                                        Fluttertoast.showToast(
+                                          msg: "Copy ke Clipboard",
+                                          textColor: ColorHelper.primary,
+                                          backgroundColor: Colors.white,
+                                        );
+                                      },
+                                      child: Text(
+                                        state.responseCreateShortUrl!.data!
+                                            .shortUrl!,
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 12,
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ],

@@ -26,13 +26,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
           emit(LoginSuccess(
               responseLogin: ResponseLogin.fromJson(result?.data)));
-        } else {
-          debugPrint('error parsing from PostLogin: ${result!.statusCode}');
+        } else if (result?.statusCode == 401) {
+          debugPrint('error parsing from PostLogin: ${result!.statusMessage}');
           emit(
             LoginError(
               responseError: ResponseError(
                 status: false,
-                message: result.data,
+                message: "user not found",
+              ),
+            ),
+          );
+        } else if (result?.statusCode == 402) {
+          debugPrint('error parsing from PostLogin: ${result!.statusMessage}');
+          emit(
+            LoginError(
+              responseError: ResponseError(
+                status: false,
+                message: "Wrong Password",
               ),
             ),
           );

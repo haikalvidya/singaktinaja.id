@@ -1,27 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_singkatin/feature/auth/auth_bloc/bloc/update_user_bloc.dart';
 import 'package:flutter_application_singkatin/feature/auth/auth_bloc/handle_api/registrasi_bloc.dart';
+import 'package:flutter_application_singkatin/feature/auth/auth_model/response_get_user.dart';
 import 'package:flutter_application_singkatin/feature/auth/auth_ui/login_page.dart';
+import 'package:flutter_application_singkatin/feature/shortlink/shortlink_ui/home_page.dart';
 import 'package:flutter_application_singkatin/helper/color_helper.dart';
 import 'package:flutter_application_singkatin/helper/resusable_widget/primary_button.dart';
 import 'package:flutter_application_singkatin/helper/resusable_widget/primary_textfield.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class UpdateUserPage extends StatefulWidget {
+  ResponseGetUser user;
+  UpdateUserPage({super.key, required this.user});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<UpdateUserPage> createState() => _UpdateUserPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _UpdateUserPageState extends State<UpdateUserPage> {
   final _emailController = TextEditingController(text: '');
   final _firstNameController = TextEditingController(text: '');
   final _lastNameController = TextEditingController(text: '');
   final _passwordController = TextEditingController(text: '');
-  final _passwordConfirmationController = TextEditingController(text: '');
+  final _phoneController = TextEditingController(text: '');
 
-  final _registrasiBloc = RegistrasiBloc();
+  String? email;
+  String? firstName;
+  String? lastName;
+  String? password;
+  String? phone;
+
+  final _updateUserBloc = UpdateUserBloc();
+
+  @override
+  void initState() {
+    var data = widget.user.data!;
+    email = data.email;
+    firstName = data.firstName;
+    lastName = data.lastName;
+    phone = data.phone;
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,18 +63,18 @@ class _SignUpPageState extends State<SignUpPage> {
               color: Colors.black,
             )),
       ),
-      body: BlocConsumer<RegistrasiBloc, RegistrasiState>(
-        bloc: _registrasiBloc,
+      body: BlocConsumer<UpdateUserBloc, UpdateUserState>(
+        bloc: _updateUserBloc,
         listener: (context, state) {
-          if (state is RegistrasiSuccess) {
-            // _tokenHelper.saveToken(state.responseRegistrasi?.data!.token ?? '');
+          if (state is UpdateUserSuccess) {
+            // _tokenHelper.saveToken(state.responseUpdateUser?.data!.token ?? '');
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const LoginPage(),
+                builder: (context) => const HomePage(),
               ),
             );
-          } else if (state is RegistrasiError) {
+          } else if (state is UpdateUserError) {
             if (state.responseError!.message == "user already exist") {
               Fluttertoast.showToast(
                 msg: "user already exist",
@@ -71,7 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Column(
                   children: [
                     const Text(
-                      "Sign up",
+                      "Edit Profile",
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -79,13 +101,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     const SizedBox(
                       height: 20,
-                    ),
-                    Text(
-                      "Create an Account,Its free",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[700],
-                      ),
                     ),
                     const SizedBox(
                       height: 30,
@@ -95,33 +110,35 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: Column(
                         children: [
                           PrimaryTextField(
-                            textEditingController: _emailController,
+                            textEditingController: _emailController
+                              ..text = widget.user.data!.email!,
                           ),
                           const SizedBox(
                             height: 24,
                           ),
                           PrimaryTextField(
-                            textEditingController: _firstNameController,
+                            textEditingController: _firstNameController
+                              ..text = widget.user.data!.firstName!,
                           ),
                           const SizedBox(
                             height: 24,
                           ),
                           PrimaryTextField(
-                            textEditingController: _lastNameController,
+                            textEditingController: _lastNameController
+                              ..text = widget.user.data!.lastName!,
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          PrimaryTextField(
+                            textEditingController: _phoneController
+                              ..text = widget.user.data!.phone!,
                           ),
                           const SizedBox(
                             height: 24,
                           ),
                           PrimaryTextField(
                             textEditingController: _passwordController,
-                            obscureText: true,
-                          ),
-                          const SizedBox(
-                            height: 24,
-                          ),
-                          PrimaryTextField(
-                            textEditingController:
-                                _passwordConfirmationController,
                             obscureText: true,
                           ),
                         ],
@@ -144,29 +161,14 @@ class _SignUpPageState extends State<SignUpPage> {
                               textColor: ColorHelper.primary,
                               backgroundColor: Colors.white,
                             );
-                          } else if (_passwordController.text.isEmpty) {
-                            Fluttertoast.showToast(
-                              msg: "Masukkan sandi",
-                              textColor: ColorHelper.primary,
-                              backgroundColor: Colors.white,
-                            );
-                          } else if (_passwordController.text !=
-                              _passwordConfirmationController.text) {
-                            debugPrint("Errorrr");
-                            Fluttertoast.showToast(
-                              msg: "Password harus sama",
-                              textColor: ColorHelper.primary,
-                              backgroundColor: Colors.white,
-                            );
                           } else {
-                            _registrasiBloc.add(
-                              PostRegister(
+                            _updateUserBloc.add(
+                              UpdateUser(
                                 email: _emailController.text,
                                 firstName: _firstNameController.text,
                                 lastName: _lastNameController.text,
-                                password: _passwordController.text,
-                                passwordConfirmation:
-                                    _passwordConfirmationController.text,
+                                phone: "083812379277",
+                                password: "",
                               ),
                             );
                           }
@@ -177,30 +179,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Already have an account? "),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginPage(),
-                            ),
-                          ),
-                          child: const Text(
-                            "Sign In",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.blue),
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
               ),

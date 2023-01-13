@@ -25,15 +25,18 @@ class WebViewExampleState extends State<WebViewExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(),
-              ),
-            );
-          },
-          child: Text('Kembali Ke Menu')),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage(),
+            ),
+          );
+        },
+        child: const Text(
+          'Kembali Ke Menu',
+        ),
+      ),
       body: SafeArea(
         child: WebView(
           initialUrl: widget.url!,

@@ -1,5 +1,7 @@
 // ignore: implementation_imports
 import 'package:flutter/material.dart';
+import 'package:flutter_application_singkatin/feature/auth/auth_bloc/bloc/get_user_bloc.dart';
+import 'package:flutter_application_singkatin/feature/auth/auth_bloc/bloc/update_user_bloc.dart';
 import 'package:flutter_application_singkatin/feature/auth/auth_bloc/handle_api/login_bloc.dart';
 import 'package:flutter_application_singkatin/feature/auth/auth_bloc/handle_api/registrasi_bloc.dart';
 import 'package:flutter_application_singkatin/feature/shortlink/shortlink_bloc/handle_api/get_active_subs_bloc.dart';
@@ -24,6 +26,8 @@ class ListBlocProvider {
       BlocProvider(create: (BuildContext context) => PaymentBloc()),
       BlocProvider(create: (BuildContext context) => GetListPaymentBloc()),
       BlocProvider(create: (BuildContext context) => GetActiveSubsBloc()),
+      BlocProvider(create: (BuildContext context) => GetUserBloc()),
+      BlocProvider(create: (BuildContext context) => UpdateUserBloc()),
     ];
   }
 }

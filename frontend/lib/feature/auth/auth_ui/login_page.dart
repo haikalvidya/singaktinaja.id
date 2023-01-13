@@ -18,8 +18,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController(text: 'testing@gmail.com');
-  final _passwordController = TextEditingController(text: 'hekalPassAmanDong');
+  final _emailController = TextEditingController(text: '');
+  final _passwordController = TextEditingController(text: '');
   final _loginBloc = LoginBloc();
   final TokenHelper _tokenHelper = TokenHelper();
 
@@ -43,9 +43,10 @@ class _LoginPageState extends State<LoginPage> {
                 builder: (context) => HomePage(),
               ),
             );
-          }
-          if (state is LoginError) {
-            if (state.responseError!.message == "notFound-login") {
+          } else if (state is LoginError) {
+            debugPrint(state.responseError!.message);
+            if (state.responseError!.message == "Wrong Password" ||
+                state.responseError!.message == "user not found") {
               Fluttertoast.showToast(
                 msg: "Pastikan email/password benar",
                 textColor: ColorHelper.primary,

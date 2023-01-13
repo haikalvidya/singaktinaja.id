@@ -23,8 +23,8 @@ type UpdateUserRequest struct {
 	FirstName *string `json:"first_name"`
 	LastName  *string `json:"last_name"`
 	Email     *string `json:"email" validate:"omitempty,email"`
-	Phone     *string `json:"phone" validate:"omitempty,numeric"`
-	Password  *string `json:"password" validate:"omitempty,min=8,max=32"`
+	Phone     *string `json:"phone" validate:"numeric"`
+	Password  *string `json:"password"`
 }
 
 type UserInfo struct {

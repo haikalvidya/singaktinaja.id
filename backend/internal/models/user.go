@@ -34,6 +34,7 @@ func (u *UserModel) PublicInfo() *payload.UserInfo {
 		FirstName: u.FirstName,
 		LastName:  u.LastName,
 		Email:     u.Email,
+		Phone:     "",
 	}
 
 	if u.Phone != nil {

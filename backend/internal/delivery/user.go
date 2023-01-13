@@ -56,7 +56,11 @@ func (d *userDelivery) LoginUser(c echo.Context) error {
 	if err != nil {
 		res.Status = false
 		res.Message = err.Error()
-		return c.JSON(http.StatusBadRequest, res)
+		if err.Error() == payload.ERROR_USER_NOT_FOUND {
+			return c.JSON(http.StatusUnauthorized, res)
+		} else {
+			return c.JSON(http.StatusPaymentRequired, res)
+		}
 	}
 
 	res.Message = "Success Login"
@@ -119,6 +123,7 @@ func (d *userDelivery) UpdateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, res)
 	}
 
+	res.Status = true
 	res.Message = "Success Update User"
 	return c.JSON(http.StatusOK, res)
 }

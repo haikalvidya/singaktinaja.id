@@ -145,15 +145,17 @@ func (u *userUsecase) UpdateUser(userID string, req *payload.UpdateUserRequest) 
 	}
 
 	err = u.Repo.Tx.DoInTransaction(func(tx *gorm.DB) error {
-		user := &models.UserModel{
-			ID: userID,
+		// get user from db
+		user, err := u.Repo.User.SelectByID(userID)
+		if err != nil {
+			return err
 		}
-		if req.Password != nil {
+		if req.Password != nil && *req.Password != "" {
 			password, _ := bcrypt.GenerateFromPassword([]byte(*req.Password), bcrypt.DefaultCost)
 			user.Password = string(password)
 		}
 
-		if req.Email != nil {
+		if req.Email != nil && *req.Email != "" && *req.Email != user.Email {
 			_, err = u.Repo.User.SelectByEmail(*req.Email)
 			if err == nil {
 				return errors.New(payload.ERROR_USER_EXIST)
@@ -161,14 +163,23 @@ func (u *userUsecase) UpdateUser(userID string, req *payload.UpdateUserRequest) 
 			user.Email = *req.Email
 		}
 
-		if req.Phone != nil {
+		if req.Phone != nil && *req.Phone != "" && *req.Phone != *user.Phone {
 			_, err = u.Repo.User.SelectByPhone(*req.Phone)
 			if err == nil {
 				return errors.New(payload.ERROR_PHONE_ALREADY_EXIST)
 			}
 			user.Phone = req.Phone
 		}
-		err := u.Repo.User.UpdateTx(tx, user)
+
+		if req.FirstName != nil && *req.FirstName != "" {
+			user.FirstName = *req.FirstName
+		}
+
+		if req.LastName != nil && *req.LastName != "" {
+			user.LastName = *req.LastName
+		}
+
+		err = u.Repo.User.UpdateTx(tx, user)
 		if err != nil {
 			return err
 		}
